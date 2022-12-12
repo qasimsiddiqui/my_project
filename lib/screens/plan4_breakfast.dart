@@ -549,7 +549,7 @@ class _Breakfast4State extends State<Breakfast4> {
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
-        children:  <Widget>[
+        children: <Widget>[
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 5),
             child: Text(

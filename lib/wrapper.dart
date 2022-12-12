@@ -12,7 +12,7 @@ class Wrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //final user = Provider.of<User>(context);
-    final user=context.watch<User>();
+    final user = context.watch<User>();
     // print(user);
     if (user != null) {
       return DietPlans();

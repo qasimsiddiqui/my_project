@@ -1,4 +1,3 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:keto_app/Services/db.dart';
@@ -10,8 +9,7 @@ class AuthService {
   final db = FirebaseFirestore.instance;
   AuthService(FirebaseAuth instance);
 
- Stream<User?> get authStateChanges => 
- _auth.authStateChanges();
+  Stream<User?> get authStateChanges => _auth.authStateChanges();
 
 //create a user object based on firebaseUser
   _userFromFirebaseUser(User? user) {
@@ -25,24 +23,22 @@ class AuthService {
         .map((User? user) => _userFromFirebaseUser(user));
   }
 
- 
-
 //Register
   Future<User?> register(String email, String password, String height,
       String weight, String address) async {
     //try {
-      UserCredential usercred = await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
+    UserCredential usercred = await _auth.createUserWithEmailAndPassword(
+        email: email, password: password);
 
-      User? user = usercred.user;
-      // create a document for the user with the uid
-      await DBservice(uid: user!.uid).createUser(
-          user.uid, email, double.parse(height), double.parse(weight), address);
-      return null;
-        
-      //await DBservice(uid:user.uid).getUserDataList();
-     // return _userFromFirebaseUser(user);
-   /* } on FirebaseAuthException catch (e) {
+    User? user = usercred.user;
+    // create a document for the user with the uid
+    await DBservice(uid: user!.uid).createUser(
+        user.uid, email, double.parse(height), double.parse(weight), address);
+    return null;
+
+    //await DBservice(uid:user.uid).getUserDataList();
+    // return _userFromFirebaseUser(user);
+    /* } on FirebaseAuthException catch (e) {
 
       if (e.code == "Weak-Password") {
         print("The password provided is too weak");
@@ -59,16 +55,15 @@ class AuthService {
 
   //sign in
   Future<User?> signIn(String email, String password) async {
-   // try {
-      UserCredential usercred = await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
-      return null;
-          
-    }
-         // return null;
-      //User? user = usercred.user;
-    //  return _userFromFirebaseUser(user);
-   /* on FirebaseAuthException catch (e) {
+    // try {
+    UserCredential usercred = await _auth.signInWithEmailAndPassword(
+        email: email, password: password);
+    return null;
+  }
+  // return null;
+  //User? user = usercred.user;
+  //  return _userFromFirebaseUser(user);
+  /* on FirebaseAuthException catch (e) {
    
       if (e.code == 'user-not-found') {
         this._error='No user found for that email.';
@@ -85,7 +80,6 @@ class AuthService {
     }
    
   }*/
-
 
 //signout
   Future<bool> signout() async {

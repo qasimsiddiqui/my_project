@@ -16,15 +16,15 @@ class _WelcomeState extends State<Welcome> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title:  Row(
+        title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: const <Widget>[
             Icon(
               Icons.restaurant_menu,
               color: Colors.black,
             ),
-            SizedBox(width:10),
-              Text(
+            SizedBox(width: 10),
+            Text(
               'Keto Diet Helper',
               style: TextStyle(
                 color: Colors.black,
@@ -40,7 +40,6 @@ class _WelcomeState extends State<Welcome> {
           fontSize: 25,
           fontWeight: FontWeight.bold,
         ),
-        
       ),
       backgroundColor: Colors.green,
       body: SafeArea(

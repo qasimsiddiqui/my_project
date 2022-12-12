@@ -48,10 +48,9 @@ class _ViewUserpageState extends State<ViewUserpage> {
           ),
         ),
         title: Text('User Data List',
-        style: TextStyle(
-          color: Colors.black,
-        )
-        ),
+            style: TextStyle(
+              color: Colors.black,
+            )),
       ),
       body: ListView.builder(
         itemCount: userData.length,

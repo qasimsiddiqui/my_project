@@ -1,17 +1,14 @@
-
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:keto_app/screens/splashscreen.dart';
 import 'package:keto_app/screens/welcome_screen.dart';
 
-
-Future<void> backgroundhandler(RemoteMessage message )async{
- // print("This is a message from background");
+Future<void> backgroundhandler(RemoteMessage message) async {
+  // print("This is a message from background");
   //print(message.notification!.title);
   // print(message.notification!.body);
 }
-
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,6 +19,7 @@ Future main() async {
     home: SplashScreen(),
   ));
 }
+
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -43,10 +41,6 @@ void initState() {
 
   @override
   Widget build(BuildContext context) {
-    
-    return  MaterialApp(
-    );
-    
-   
+    return MaterialApp();
   }
 }

@@ -23,13 +23,13 @@ class SignUpScreenUser extends StatefulWidget {
 }
 
 class _SignUpScreenUserState extends State<SignUpScreenUser> {
-  bool navigateToPage=false;
+  bool navigateToPage = false;
   int _value = 1;
   final DBservice uid = DBservice();
   final AuthService _auth = AuthService(FirebaseAuth.instance);
   final _formKey = GlobalKey<FormState>();
   TextEditingController Username = TextEditingController();
- // OneSignalService one=OneSignalService();
+  // OneSignalService one=OneSignalService();
 //String Username="";
   TextEditingController passwordField = TextEditingController();
   TextEditingController height = TextEditingController();
@@ -47,7 +47,6 @@ class _SignUpScreenUserState extends State<SignUpScreenUser> {
         : Scaffold(
             resizeToAvoidBottomInset: false,
             backgroundColor: Colors.green,
-           
             body: SingleChildScrollView(
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 40),
@@ -56,7 +55,6 @@ class _SignUpScreenUserState extends State<SignUpScreenUser> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                   
                     Column(
                       children: const <Widget>[
                         Text(
@@ -78,7 +76,7 @@ class _SignUpScreenUserState extends State<SignUpScreenUser> {
                         )
                       ],
                     ),
-                  /*  Row(
+                    /*  Row(
                       children: <Widget>[
                         const SizedBox(width: 2),
                         Radio(
@@ -124,11 +122,11 @@ class _SignUpScreenUserState extends State<SignUpScreenUser> {
                           const SizedBox(height: 15.0),
                           TextFormField(
                             controller: Username,
-                      
+
                             // onChanged: (value) => Username.text=value.toString(),
                             decoration: const InputDecoration(
                               contentPadding: EdgeInsets.symmetric(
-                              vertical: 0, horizontal: 10),
+                                  vertical: 0, horizontal: 10),
                               hintText: 'username',
                               fillColor: Colors.white,
                               filled: true,
@@ -153,14 +151,10 @@ class _SignUpScreenUserState extends State<SignUpScreenUser> {
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter username';
-                              }
-                              else if(value.length<3)
-                              {
+                              } else if (value.length < 3) {
                                 return "Username must be more than 2 characters";
-                              }
-                              else if(!RegExp("^[a-zA-Z]").hasMatch(value))
-                              {
-                              return 'Please enter username between a-z or A-Z';
+                              } else if (!RegExp("^[a-zA-Z]").hasMatch(value)) {
+                                return 'Please enter username between a-z or A-Z';
                               }
                               return null;
                             },
@@ -199,10 +193,8 @@ class _SignUpScreenUserState extends State<SignUpScreenUser> {
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter height';
-                              }
-                              else if(!RegExp("^[0-9]").hasMatch(value))
-                              {
-                              return 'Please enter valid height in numbers';
+                              } else if (!RegExp("^[0-9]").hasMatch(value)) {
+                                return 'Please enter valid height in numbers';
                               }
                               return null;
                             },
@@ -238,10 +230,8 @@ class _SignUpScreenUserState extends State<SignUpScreenUser> {
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter weight';
-                              }
-                              else if(!RegExp("^[0-9]").hasMatch(value))
-                              {
-                              return 'Please enter valid weight in Kgs';
+                              } else if (!RegExp("^[0-9]").hasMatch(value)) {
+                                return 'Please enter valid weight in Kgs';
                               }
                               return null;
                             },
@@ -278,8 +268,7 @@ class _SignUpScreenUserState extends State<SignUpScreenUser> {
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter email';
-                              }
-                              else if (!RegExp(
+                              } else if (!RegExp(
                                       "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
                                   .hasMatch(value)) {
                                 return 'Please enter a valid Email';
@@ -379,61 +368,53 @@ class _SignUpScreenUserState extends State<SignUpScreenUser> {
                             //  );
                             //  final String uid='';
 
-                           final keto_collection = FirebaseFirestore.instance
+                            final keto_collection = FirebaseFirestore.instance
                                 .collection('User Data');
-                                if(_value==1){
-                                
-                            dynamic result = await _auth
-                                .register(emailField.text, passwordField.text,
-                                height.text, weight.text, address.text) 
-                                .then((User? user) => 
-                                
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                   builder: (context) => DietPlans()))).onError((error, stackTrace) {
-                                        
-                                        print("Error ${error.toString()}");
-                                         ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(
-                                  content: Text('This email already exists'),
-                               // duration: const Duration(seconds: 3),
-                                   ),
-                 
-                                     );
-                                   } );
-                                
-                                
-                               if (result == null) {
-                              setState(() {
-                                error = 'please provide a valid email';
-                                loading = false;
+                            if (_value == 1) {
+                              dynamic result = await _auth
+                                  .register(emailField.text, passwordField.text,
+                                      height.text, weight.text, address.text)
+                                  .then((User? user) => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => DietPlans())))
+                                  .onError((error, stackTrace) {
+                                print("Error ${error.toString()}");
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('This email already exists'),
+                                    // duration: const Duration(seconds: 3),
+                                  ),
+                                );
                               });
+
+                              if (result == null) {
+                                setState(() {
+                                  error = 'please provide a valid email';
+                                  loading = false;
+                                });
+                              }
                             }
-                                }
 
-                                //Rider
-                         else  if(_value==2){
-                            dynamic result = await _auth
-                                .register(emailField.text,passwordField.text,
-                                height.text, weight.text, address.text)
-                                .whenComplete(() => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => Breakfast1())));
-                                     
+                            //Rider
+                            else if (_value == 2) {
+                              dynamic result = await _auth
+                                  .register(emailField.text, passwordField.text,
+                                      height.text, weight.text, address.text)
+                                  .whenComplete(() => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Breakfast1())));
 
-                            if (result == null) {
-                              setState(() {
-                                error = 'please provide a valid email';
-                                loading = false;
-                              });
+                              if (result == null) {
+                                setState(() {
+                                  error = 'please provide a valid email';
+                                  loading = false;
+                                });
+                              }
                             }
-                                }
-
-                                }
+                          }
                           // await context.read<AuthService>().Register(emailField.text,passwordField.text);
-                         
                         },
                         color: Colors.white,
                         elevation: 0,

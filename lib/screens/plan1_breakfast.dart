@@ -28,7 +28,7 @@ class _Breakfast1State extends State<Breakfast1> {
         // automaticallyImplyLeading: false,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children:  [
+          children: [
             Icon(
               Icons.restaurant_menu,
               color: Colors.black,

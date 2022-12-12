@@ -10,22 +10,19 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    Future.delayed(Duration(seconds: 5)).then((value) =>Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>  Welcome())) );
+    Future.delayed(Duration(seconds: 5)).then((value) => Navigator.push(
+        context, MaterialPageRoute(builder: (context) => Welcome())));
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.deepOrangeAccent,
       body: Center(
-
         child: Container(
           height: 200,
           width: 200,

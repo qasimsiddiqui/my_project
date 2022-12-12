@@ -31,13 +31,14 @@ class _DietMenu3State extends State<DietMenu3> {
         // automaticallyImplyLeading: false,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children:  [
-           const Icon(
+          children: [
+            const Icon(
               Icons.restaurant_menu,
               color: Colors.black,
             ),
             const SizedBox(width: 10),
-            Text( 'Menu',
+            Text(
+              'Menu',
               style: TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
@@ -170,7 +171,7 @@ class _DietMenu3State extends State<DietMenu3> {
   Widget breakfast() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
-      children:  <Widget>[
+      children: <Widget>[
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 5),
           child: Text(
@@ -215,7 +216,7 @@ class _DietMenu3State extends State<DietMenu3> {
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
-        children:  <Widget>[
+        children: <Widget>[
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 5),
             child: Text(

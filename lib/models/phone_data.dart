@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 
-class PhoneData{
-
+class PhoneData {
   String phone_no;
 
-
-PhoneData({required this.phone_no });
+  PhoneData({required this.phone_no});
 }

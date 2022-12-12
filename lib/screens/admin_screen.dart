@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -16,36 +15,36 @@ import 'package:keto_app/Services/db.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:keto_app/screens/signup_page2.dart';
 
-
-
-
 class AdminScreen extends StatefulWidget {
-  const AdminScreen({Key? key, }) : super(key: key);
+  const AdminScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<AdminScreen> createState() => _AdminScreenState();
 }
 
 class _AdminScreenState extends State<AdminScreen> {
-  String?  mtoken=" ";
-  DBservice userid=DBservice();
-  late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin=FlutterLocalNotificationsPlugin();
+  String? mtoken = " ";
+  DBservice userid = DBservice();
+  late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
   late AndroidNotificationChannel channel;
   final AuthService _auth = AuthService(FirebaseAuth.instance);
-  
-  TextEditingController tokenid=TextEditingController();
-  TextEditingController title=TextEditingController();
-  TextEditingController body=TextEditingController();
+
+  TextEditingController tokenid = TextEditingController();
+  TextEditingController title = TextEditingController();
+  TextEditingController body = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
-  final List<BottomNavigationBar> items=[];
-String? notificationMsg;
+  final List<BottomNavigationBar> items = [];
+  String? notificationMsg;
   @override
   void initState() {
     super.initState();
 
-   //foreground state
-   FirebaseMessaging.instance.getInitialMessage();
+    //foreground state
+    FirebaseMessaging.instance.getInitialMessage();
     /*FirebaseMessaging.onMessage.listen((event) {
      setState(() {
     
@@ -55,93 +54,87 @@ String? notificationMsg;
       print("FCM message recieved");
     });*/
     requestPermission();
-   //getToken();
-   FCMload();
-   FirebaseMessaging.onMessage.listen(showFlutterNotification);
-   FirebaseMessaging.instance.subscribeToTopic('Keto_App');
-    
+    //getToken();
+    FCMload();
+    FirebaseMessaging.onMessage.listen(showFlutterNotification);
+    FirebaseMessaging.instance.subscribeToTopic('Keto_App');
   }
+
   //fCM load
-  void FCMload()async {
-  channel = const AndroidNotificationChannel(
-    'high_importance_channel', // id
-    'High Importance Notifications', // title
+  void FCMload() async {
+    channel = const AndroidNotificationChannel(
+      'high_importance_channel', // id
+      'High Importance Notifications', // title
 
-    importance: Importance.high,
-    enableVibration: true,
-  );
+      importance: Importance.high,
+      enableVibration: true,
+    );
 
-  flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-  /// Create an Android Notification Channel.
-  ///
-  /// We use this channel in the `AndroidManifest.xml` file to override the
-  /// default FCM channel to enable heads up notifications.
-  await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(channel);
+    /// Create an Android Notification Channel.
+    ///
+    /// We use this channel in the `AndroidManifest.xml` file to override the
+    /// default FCM channel to enable heads up notifications.
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(channel);
 
-  /// Update the iOS foreground notification presentation options to allow
-  /// heads up notifications.
-  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-    alert: true,
-    badge: true,
-    sound: true,
-  );
-
-
-  }
-
-  //fcm listen 
-  void showFlutterNotification(RemoteMessage message) {
-  RemoteNotification? notification = message.notification;
-  AndroidNotification? android = message.notification?.android;
-  if (notification != null && android != null && !kIsWeb) {
-    flutterLocalNotificationsPlugin.show(
-      notification.hashCode,
-      notification.title,
-      notification.body,
-      NotificationDetails(
-        android: AndroidNotificationDetails(
-          channel.id,
-          channel.name,
-          // TODO add a proper drawable resource to android, for now using
-          //      one that already exists in example app.
-          icon: 'launch_background',
-        ),
-      ),
+    /// Update the iOS foreground notification presentation options to allow
+    /// heads up notifications.
+    await FirebaseMessaging.instance
+        .setForegroundNotificationPresentationOptions(
+      alert: true,
+      badge: true,
+      sound: true,
     );
   }
-}
+
+  //fcm listen
+  void showFlutterNotification(RemoteMessage message) {
+    RemoteNotification? notification = message.notification;
+    AndroidNotification? android = message.notification?.android;
+    if (notification != null && android != null && !kIsWeb) {
+      flutterLocalNotificationsPlugin.show(
+        notification.hashCode,
+        notification.title,
+        notification.body,
+        NotificationDetails(
+          android: AndroidNotificationDetails(
+            channel.id,
+            channel.name,
+            // TODO add a proper drawable resource to android, for now using
+            //      one that already exists in example app.
+            icon: 'launch_background',
+          ),
+        ),
+      );
+    }
+  }
+
 //Request permission method
-void requestPermission()async{
- FirebaseMessaging messaging =FirebaseMessaging.instance;
+  void requestPermission() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
 
- NotificationSettings settings= await messaging.requestPermission(
-    alert: true,
-    announcement: false,
-    badge: true,
-    carPlay: false,
-    criticalAlert: false,
-    provisional: false,
-    sound: true
+    NotificationSettings settings = await messaging.requestPermission(
+        alert: true,
+        announcement: false,
+        badge: true,
+        carPlay: false,
+        criticalAlert: false,
+        provisional: false,
+        sound: true);
 
- );
-
- if(settings.authorizationStatus==AuthorizationStatus.authorized)
- {
-  print("user Granted Permission");
- }
- else if(settings.authorizationStatus==AuthorizationStatus.provisional)
- {
-  print("User Granted Provisional Permission");
- }
- else
- {
-  print("User declined or has not accepted permission");
- }
-}
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      print("user Granted Permission");
+    } else if (settings.authorizationStatus ==
+        AuthorizationStatus.provisional) {
+      print("User Granted Provisional Permission");
+    } else {
+      print("User declined or has not accepted permission");
+    }
+  }
 //get token method
 /*void getToken()async{
   await FirebaseMessaging.instance.getToken().then((token)
@@ -162,55 +155,43 @@ await FirebaseFirestore.instance.collection("User Token").doc(FirebaseAuth.insta
 
 });
 }*/
-  
- void sendPushMessage(String token, String title, String body) async
- {
-  if (token =="") {
+
+  void sendPushMessage(String token, String title, String body) async {
+    if (token == "") {
       print('Unable to send FCM message, no token exists.');
       return;
     }
 
-  try{
-   await http.post(
-        Uri.parse('https://fcm.googleapis.com/fcm/send'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': 'key=AAAAP8e6UWc:APA91bFr-t9z9roDnd27VqgG2GMIQN6Ze7yaxmKY21Ez06m49b5WZst66Wrfv5TvKs9TZHeeBX9CovxONiQ4DLRwTaR-5ushZsULsE689UezdvvS3hgcAOT0gFiZ-DuPCoZw6rymSgpQ',
-        },
-        body: jsonEncode(
-         <String, dynamic> 
-          {
-          'priority': 'high',
-           'data' : <String, dynamic>
-           {
-            'click_action' : 'FLUTTER_NOTIFICATION_CLICK',
-            'status' : 'done',
-             'body' : body,
-             'title': title,
-           },
-           'notification' : <String, dynamic>
-           {
-           "title" : title,
-           "body" : body,
-           "android_channel_id" : "dbfood"
-           },
-           "to" : token,
-          }
-        )
-   );
+    try {
+      await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization':
+                'key=AAAAP8e6UWc:APA91bFr-t9z9roDnd27VqgG2GMIQN6Ze7yaxmKY21Ez06m49b5WZst66Wrfv5TvKs9TZHeeBX9CovxONiQ4DLRwTaR-5ushZsULsE689UezdvvS3hgcAOT0gFiZ-DuPCoZw6rymSgpQ',
+          },
+          body: jsonEncode(<String, dynamic>{
+            'priority': 'high',
+            'data': <String, dynamic>{
+              'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+              'status': 'done',
+              'body': body,
+              'title': title,
+            },
+            'notification': <String, dynamic>{
+              "title": title,
+              "body": body,
+              "android_channel_id": "dbfood"
+            },
+            "to": token,
+          }));
+    } catch (e) {
+      print(e);
+      if (kDebugMode) {
+        print("error push notifications");
+      }
+    }
   }
 
-  catch(e)
-  { 
-    print(e);
-  if(kDebugMode)
-  {
-    print("error push notifications");
-  }
-  }
- }
-  
-   
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -222,7 +203,6 @@ await FirebaseFirestore.instance.collection("User Token").doc(FirebaseAuth.insta
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            
             const Text(
               'Admin Panel',
               style: TextStyle(
@@ -232,19 +212,20 @@ await FirebaseFirestore.instance.collection("User Token").doc(FirebaseAuth.insta
               ),
             ),
             const SizedBox(width: 40),
-             ElevatedButton.icon(
-              icon: const Icon(Icons.person,
-              color: Colors.black,
-              ),
-              label: const Text('Logout',
-              style: TextStyle(
+            ElevatedButton.icon(
+              icon: const Icon(
+                Icons.person,
                 color: Colors.black,
               ),
-              
+              label: const Text(
+                'Logout',
+                style: TextStyle(
+                  color: Colors.black,
+                ),
               ),
               onPressed: () async {
-                
-                    await AlertDialogs.yesCancelDialog(context, 'Logout', 'Are you sure you want to logout?');
+                await AlertDialogs.yesCancelDialog(
+                    context, 'Logout', 'Are you sure you want to logout?');
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.deepOrangeAccent,
@@ -253,135 +234,120 @@ await FirebaseFirestore.instance.collection("User Token").doc(FirebaseAuth.insta
           ],
         ),
       ),
-        body: Center(
+      body: Center(
         child: Form(
-       key: _formKey,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,   
-          children: [
+          key: _formKey,
+          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
             TextFormField(
               keyboardType: TextInputType.text,
               controller: tokenid,
-              
               decoration: InputDecoration(
                 hintText: "Enter token",
               ),
               validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter tokens';
-                              }
-                              return null;
-                              
-                            },
+                if (value == null || value.isEmpty) {
+                  return 'Please enter tokens';
+                }
+                return null;
+              },
             ),
 
             const SizedBox(height: 20),
 
             TextFormField(
-              controller: title,
-              
-              decoration: InputDecoration(
-                hintText: "Enter title",
-              ),
-              validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'title is required';
-                              }
-              }
-            ),
+                controller: title,
+                decoration: InputDecoration(
+                  hintText: "Enter title",
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'title is required';
+                  }
+                }),
 
             const SizedBox(height: 20),
 
             TextFormField(
-              keyboardType: TextInputType.text,
-              controller: body,
-              decoration: InputDecoration(
-  
-                hintText: "Enter Today's Menu Details",
-              ),
-              validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Menu  is required';
-                              }
-                              return null;
-              }
-            ),
+                keyboardType: TextInputType.text,
+                controller: body,
+                decoration: InputDecoration(
+                  hintText: "Enter Today's Menu Details",
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Menu  is required';
+                  }
+                  return null;
+                }),
             const SizedBox(height: 20),
-       // MaterialButton(
-          
-        // onPressed:() {
-        //   if(_formKey.currentState!.validate())
-           //{
-           GestureDetector(
-              
-              onTap: () async{
-                if(_formKey.currentState!.validate())
-                {
-                String tokenId=tokenid.text.trim();
-                String user_title=title.text.trim();
-                String user_body=body.text.trim();
-               // if(tokenId!="")
-                //{
-                  
-            
-                  
-                  DocumentSnapshot snap=await FirebaseFirestore.instance.collection("User Token").doc(FirebaseAuth.instance.currentUser!.uid).get();
-                
-                 
-                   //var doc;
-                  String token=snap['token'];
+            // MaterialButton(
+
+            // onPressed:() {
+            //   if(_formKey.currentState!.validate())
+            //{
+            GestureDetector(
+              onTap: () async {
+                if (_formKey.currentState!.validate()) {
+                  String tokenId = tokenid.text.trim();
+                  String user_title = title.text.trim();
+                  String user_body = body.text.trim();
+                  // if(tokenId!="")
+                  //{
+
+                  DocumentSnapshot snap = await FirebaseFirestore.instance
+                      .collection("User Token")
+                      .doc(FirebaseAuth.instance.currentUser!.uid)
+                      .get();
+
+                  //var doc;
+                  String token = snap['token'];
                   print(token);
                   sendPushMessage(token, user_title, user_body);
-              //  }
-                
-              };
+                  //  }
+
+                }
+                ;
               },
-               child:  Container(
-                        //"send",
-                        margin: const EdgeInsets.all(20),
-                        width: 100,
-                        height: 40,
-                        color: Colors.deepOrangeAccent,
-                       child: Text(
-                          "send",
-                          textAlign: TextAlign.center,
-                           style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 18,
-                          color: Colors.black,
-                        ),
-                        ),
-             ),
+              child: Container(
+                //"send",
+                margin: const EdgeInsets.all(20),
+                width: 100,
+                height: 40,
+                color: Colors.deepOrangeAccent,
+                child: Text(
+                  "send",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 18,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
             ),
-        
-       
-          
-          const SizedBox(height: 20),
-          MaterialButton(
-          
-          onPressed:() {
-            Navigator.push(
+
+            const SizedBox(height: 20),
+            MaterialButton(
+              onPressed: () {
+                Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => const ViewUserpage()));
-          },
-          color: Colors.deepOrangeAccent,
-          child: const Text(
-                        "view user data",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 18,
-                          color: Colors.black,
-                        ),
-                      ),
-          ),
-      
-          ]
+              },
+              color: Colors.deepOrangeAccent,
+              child: const Text(
+                "view user data",
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 18,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ]),
         ),
-            
       ),
-      ),
-     /* bottomNavigationBar: BottomNavigationBar(
+      /* bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home
@@ -405,9 +371,6 @@ await FirebaseFirestore.instance.collection("User Token").doc(FirebaseAuth.insta
         
         
         ),*/
-       
-        );
-     
-    
+    );
   }
 }

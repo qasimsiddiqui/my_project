@@ -31,7 +31,7 @@ class _DietMenu2State extends State<DietMenu2> {
         // automaticallyImplyLeading: false,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children:  const [
+          children: const [
             Icon(
               Icons.restaurant_menu,
               color: Colors.black,

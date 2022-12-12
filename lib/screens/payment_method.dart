@@ -12,42 +12,40 @@ import 'package:keto_app/screens/login_page2.dart';
 
 class PaymentScreen extends StatefulWidget {
   final Plans plans;
-   PaymentScreen({Key? key, required this.plans}) : super(key: key);
+  PaymentScreen({Key? key, required this.plans}) : super(key: key);
 
   @override
   State<PaymentScreen> createState() => _PaymentScreenState();
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
-final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
 
-  DBservice db=DBservice();
+  DBservice db = DBservice();
 
-  TextEditingController number=TextEditingController();
+  TextEditingController number = TextEditingController();
 
-  CollectionReference payment=FirebaseFirestore.instance.collection("Payment");
+  CollectionReference payment =
+      FirebaseFirestore.instance.collection("Payment");
 
-  String jazcash_num="";
-
-  
+  String jazcash_num = "";
 
   //final AuthService _auth = AuthService(FirebaseAuth.instance);
 
-  createAlertDialog(BuildContext context){
-  return showDialog(context: context, builder: (context)
-  {
-    return AlertDialog(
-      title: Text("Payment has been submitted"),
-    );
+  createAlertDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Payment has been submitted"),
+          );
+        });
   }
-  
-  );
-}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     backgroundColor: Colors.grey,
+      backgroundColor: Colors.grey,
       appBar: AppBar(
         backgroundColor: Colors.deepOrangeAccent,
         centerTitle: true,
@@ -71,7 +69,6 @@ final _formKey = GlobalKey<FormState>();
         ),
       ),
       resizeToAvoidBottomInset: true,
-    
       body: SafeArea(
         child: Column(
           children: <Widget>[
@@ -84,18 +81,18 @@ final _formKey = GlobalKey<FormState>();
                 child: Column(
                   children: <Widget>[
                     Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        TextFormField(
-                          onChanged: (value) {
-                            jazcash_num=value;
-                          },
-                          controller: number,
-                          keyboardType: TextInputType.phone,
-                           decoration: const InputDecoration(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          TextFormField(
+                            onChanged: (value) {
+                              jazcash_num = value;
+                            },
+                            controller: number,
+                            keyboardType: TextInputType.phone,
+                            decoration: const InputDecoration(
                               contentPadding: EdgeInsets.symmetric(
-                              vertical: 0, horizontal: 10),
+                                  vertical: 0, horizontal: 10),
                               hintText: 'number',
                               fillColor: Colors.white,
                               filled: true,
@@ -119,83 +116,70 @@ final _formKey = GlobalKey<FormState>();
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter jazcash number';
-                              }
-                              else if(value.length<11||value.length>13)
-                              {
+                              } else if (value.length < 11 ||
+                                  value.length > 13) {
                                 return "Mobile number must be between 11 to 13  digits";
-                              }
-                             else if(!RegExp("^[(+92|0|92)][0-9]{10}").hasMatch(value))
-                              {
+                              } else if (!RegExp("^[(+92|0|92)][0-9]{10}")
+                                  .hasMatch(value)) {
                                 return "Mobile number must start with 0, +92 or 92";
                               }
-                            
+
                               return null;
                             },
-                        ),
-                        const SizedBox(height: 20),
-                        
-                      ],
-                    ), 
+                          ),
+                          const SizedBox(height: 20),
+                        ],
+                      ),
                     ),
                   ],
                 ),
               ),
             ),
             const SizedBox(height: 20),
-               //show data
-           Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-             children: [
-            
-              Text(widget.plans.title,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600
-              ),
-              ),
-             ],
-          ),
-          SizedBox(height: 20),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-             children: [
-            
-              Text('Price :  '+widget.plans.price,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600
-              ),
-              ),
-             ],
-          ),
-          SizedBox(height: 20),
+            //show data
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.plans.title,
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Price :  ' + widget.plans.price,
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: MaterialButton(
                 minWidth: double.infinity,
                 height: 50,
-                onPressed: () async{
-                  if (_formKey.currentState!.validate())
-                  {
-
-                   // await _auth.signIn(emailField, passwordField);
-                   await payment.add({
-                      "Phone_Number" : jazcash_num,
-                       "Diet Plan" : widget.plans.title,
-                       "Amount" : widget.plans.price,
-                        'UserId' :FirebaseAuth.instance.currentUser!.uid,
-                       
-                      }).then((value) {
-                         Navigator.push(
+                onPressed: () async {
+                  if (_formKey.currentState!.validate()) {
+                    // await _auth.signIn(emailField, passwordField);
+                    await payment.add({
+                      "Phone_Number": jazcash_num,
+                      "Diet Plan": widget.plans.title,
+                      "Amount": widget.plans.price,
+                      'UserId': FirebaseAuth.instance.currentUser!.uid,
+                    }).then((value) {
+                      Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => Notifications()));
-                  
-                      });
-                      createAlertDialog(context);
-                }
+                    });
+                    createAlertDialog(context);
+                  }
                 },
                 color: Colors.deepOrangeAccent,
                 elevation: 0,
@@ -212,37 +196,35 @@ final _formKey = GlobalKey<FormState>();
                 ),
               ),
             ),
-            SizedBox(height : 30),
+            SizedBox(height: 30),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40),
-              child: MaterialButton(
-                minWidth: double.infinity,
-                height: 50,
-                onPressed: () {
-                   Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => WeightCompare()));
-                },
-                color: Colors.deepOrangeAccent,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(40),
-                ),
-                child: const Text(
-                  "Compare Weight",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 18,
-                    color: Colors.black,
+                padding: const EdgeInsets.symmetric(horizontal: 40),
+                child: MaterialButton(
+                  minWidth: double.infinity,
+                  height: 50,
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => WeightCompare()));
+                  },
+                  color: Colors.deepOrangeAccent,
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(40),
                   ),
-                ),
-              )
-            ),
+                  child: const Text(
+                    "Compare Weight",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 18,
+                      color: Colors.black,
+                    ),
+                  ),
+                )),
           ],
         ),
       ),
     );
-                
   }
 }

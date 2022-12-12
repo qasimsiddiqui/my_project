@@ -8,16 +8,12 @@ class UserData {
   String address;
   //String tokenId;
 
-  UserData(
-      {required this.userId,
-      required this.email,
-      required this.height,
-      required this.weight,
-      required this.address,
-     // required this.tokenId
-     }
-     );
-
-  
-
+  UserData({
+    required this.userId,
+    required this.email,
+    required this.height,
+    required this.weight,
+    required this.address,
+    // required this.tokenId
+  });
 }

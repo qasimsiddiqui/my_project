@@ -9,26 +9,23 @@ class SendSMS extends StatefulWidget {
 }
 
 class _SendSMSState extends State<SendSMS> {
-
   late TextEditingController _controllerPeople, _controllerMessage;
-  String?  msg,body;
+  String? msg, body;
   String _canSendSMSMessage = 'Check is not run.';
   List<String> people = [];
   bool sendDirect = false;
   @override
-
   void initState() {
     super.initState();
     initPlatformState();
   }
-
 
   Future<void> initPlatformState() async {
     _controllerPeople = TextEditingController();
     _controllerMessage = TextEditingController();
   }
 
-  Future<void> _sendSMS( List<String> list_recipients) async {
+  Future<void> _sendSMS(List<String> list_recipients) async {
     try {
       String _result = await sendSMS(
         message: _controllerMessage.text,
@@ -41,7 +38,7 @@ class _SendSMSState extends State<SendSMS> {
     }
   }
 
-Future<bool> _canSendSMS() async {
+  Future<bool> _canSendSMS() async {
     bool _result = await canSendSMS();
     setState(() => _canSendSMSMessage =
         _result ? 'This unit can send SMS' : 'This unit cannot send SMS');
@@ -83,121 +80,118 @@ Future<bool> _canSendSMS() async {
     );
   }
 
-
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: const Text('SMS/MMS Example'),
-        ),
-         body: ListView(
-          children: <Widget>[
-            if (people.isEmpty)
-              const SizedBox(height: 0)
-            else
-              SizedBox(
-                height: 90,
-                child: Padding(
-                  padding: const EdgeInsets.all(3),
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: List<Widget>.generate(people.length, (int index) {
-                      return _phoneTile(people[index]);
-                    }),
-                  ),
-                ),
-              ),
-              ListTile(
-              leading: const Icon(Icons.people),
-              title: TextField(
-                controller: _controllerPeople,
-                decoration:
-                    const InputDecoration(labelText: 'Add Phone Number'),
-                keyboardType: TextInputType.number,
-                onChanged: (String value) => setState(() {}),
-              ),
-              trailing: IconButton(
-                icon: const Icon(Icons.add),
-                onPressed: _controllerPeople.text.isEmpty
-                    ? null
-                    : () => setState(() {
-                          people.add(_controllerPeople.text.toString());
-                          _controllerPeople.clear();
-                        }),
-              ),
-            ),
-            const Divider(),
-            ListTile(
-              leading: const Icon(Icons.message),
-              title: TextField(
-                decoration: const InputDecoration(labelText: 'Add Message'),
-                controller: _controllerMessage,
-                onChanged: (String value) => setState(() {}),
-              ),
-            ),
-            const Divider(),
-            ListTile(
-              title: const Text('Can send SMS'),
-              subtitle: Text(_canSendSMSMessage),
-              trailing: IconButton(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                icon: const Icon(Icons.check),
-                onPressed: () {
-                  _canSendSMS();
-                },
-              ),
-            ),
-
-            SwitchListTile(
-                title: const Text('Send Direct'),
-                subtitle: const Text(
-                    'Should we skip the additional dialog? (Android only)'),
-                value: sendDirect,
-                onChanged: (bool newValue) {
-                  setState(() {
-                    sendDirect = newValue;
-                  });
-                }),
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.resolveWith(
-                      (states) => Theme.of(context).colorScheme.secondary),
-                  padding: MaterialStateProperty.resolveWith(
-                      (states) => const EdgeInsets.symmetric(vertical: 16)),
-                ),
-                onPressed: () {
-                  _send();
-                },
-                child: Text(
-                  'SEND',
-                  style: Theme.of(context).textTheme.displayMedium,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: const Text('SMS/MMS Example'),
+      ),
+      body: ListView(
+        children: <Widget>[
+          if (people.isEmpty)
+            const SizedBox(height: 0)
+          else
+            SizedBox(
+              height: 90,
+              child: Padding(
+                padding: const EdgeInsets.all(3),
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: List<Widget>.generate(people.length, (int index) {
+                    return _phoneTile(people[index]);
+                  }),
                 ),
               ),
             ),
-            Visibility(
-              visible: msg != null,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: Text(
-                        msg ?? 'No Data',
-                        maxLines: null,
-                      ),
+          ListTile(
+            leading: const Icon(Icons.people),
+            title: TextField(
+              controller: _controllerPeople,
+              decoration: const InputDecoration(labelText: 'Add Phone Number'),
+              keyboardType: TextInputType.number,
+              onChanged: (String value) => setState(() {}),
+            ),
+            trailing: IconButton(
+              icon: const Icon(Icons.add),
+              onPressed: _controllerPeople.text.isEmpty
+                  ? null
+                  : () => setState(() {
+                        people.add(_controllerPeople.text.toString());
+                        _controllerPeople.clear();
+                      }),
+            ),
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.message),
+            title: TextField(
+              decoration: const InputDecoration(labelText: 'Add Message'),
+              controller: _controllerMessage,
+              onChanged: (String value) => setState(() {}),
+            ),
+          ),
+          const Divider(),
+          ListTile(
+            title: const Text('Can send SMS'),
+            subtitle: Text(_canSendSMSMessage),
+            trailing: IconButton(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              icon: const Icon(Icons.check),
+              onPressed: () {
+                _canSendSMS();
+              },
+            ),
+          ),
+          SwitchListTile(
+              title: const Text('Send Direct'),
+              subtitle: const Text(
+                  'Should we skip the additional dialog? (Android only)'),
+              value: sendDirect,
+              onChanged: (bool newValue) {
+                setState(() {
+                  sendDirect = newValue;
+                });
+              }),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.resolveWith(
+                    (states) => Theme.of(context).colorScheme.secondary),
+                padding: MaterialStateProperty.resolveWith(
+                    (states) => const EdgeInsets.symmetric(vertical: 16)),
+              ),
+              onPressed: () {
+                _send();
+              },
+              child: Text(
+                'SEND',
+                style: Theme.of(context).textTheme.displayMedium,
+              ),
+            ),
+          ),
+          Visibility(
+            visible: msg != null,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Text(
+                      msg ?? 'No Data',
+                      maxLines: null,
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
-      );
-
+          ),
+        ],
+      ),
+    );
   }
+
   void _send() {
     if (people.isEmpty) {
       setState(() => msg = 'At Least 1 Person or Message Required');
