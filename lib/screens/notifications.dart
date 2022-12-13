@@ -60,9 +60,9 @@ class _NotificationsState extends State<Notifications> {
 //save token
   void saveToken(String token) async {
     await FirebaseFirestore.instance
-        .collection("User Token")
+        .collection("User Data")
         .doc(FirebaseAuth.instance.currentUser!.uid)
-        .set({
+        .update({
       "token": token,
     });
   }

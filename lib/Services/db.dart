@@ -29,14 +29,14 @@ class DBservice {
     //and adds the user data
     await db
         .collection('User Data')
-        .doc()
+        .doc(uid)
         .set({
           'userId': uid,
           'Email': email,
-          'Height': height,
-          'Weight': weight,
+          'Height': height.toString(),
+          'Weight': weight.toString(),
           'Address': address,
-          //'Token' : '$mtoken',
+          'token': "",
           'role': 'user'
         })
         .then((value) => print("User has registered successfully"))
@@ -54,6 +54,7 @@ class DBservice {
           height: v['Height'],
           weight: v['Weight'],
           address: v['Address'],
+          token: v['token'],
         );
         userData.add(uData);
       }

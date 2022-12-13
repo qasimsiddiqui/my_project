@@ -54,11 +54,27 @@ class _AdminScreenState extends State<AdminScreen> {
       print("FCM message recieved");
     });*/
     requestPermission();
+    getData();
     //getToken();
     FCMload();
     FirebaseMessaging.onMessage.listen(showFlutterNotification);
     FirebaseMessaging.instance.subscribeToTopic('Keto_App');
   }
+
+  DBservice db = DBservice();
+  List<UserData> userData = [];
+
+  getData() async {
+    await db.fetchUserData().then((res) {
+      setState(() {
+        userData = res;
+        print(userData);
+        _selectedUser = userData[0];
+      });
+    });
+  }
+
+  UserData? _selectedUser = null;
 
   //fCM load
   void FCMload() async {
@@ -163,27 +179,29 @@ await FirebaseFirestore.instance.collection("User Token").doc(FirebaseAuth.insta
     }
 
     try {
-      await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-            'Authorization':
-                'key=AAAAP8e6UWc:APA91bFr-t9z9roDnd27VqgG2GMIQN6Ze7yaxmKY21Ez06m49b5WZst66Wrfv5TvKs9TZHeeBX9CovxONiQ4DLRwTaR-5ushZsULsE689UezdvvS3hgcAOT0gFiZ-DuPCoZw6rymSgpQ',
-          },
-          body: jsonEncode(<String, dynamic>{
-            'priority': 'high',
-            'data': <String, dynamic>{
-              'click_action': 'FLUTTER_NOTIFICATION_CLICK',
-              'status': 'done',
-              'body': body,
-              'title': title,
-            },
-            'notification': <String, dynamic>{
-              "title": title,
-              "body": body,
-              "android_channel_id": "dbfood"
-            },
-            "to": token,
-          }));
+      final response =
+          await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
+              headers: <String, String>{
+                'Content-Type': 'application/json; charset=UTF-8',
+                'Authorization':
+                    'key=AAAAP8e6UWc:APA91bFr-t9z9roDnd27VqgG2GMIQN6Ze7yaxmKY21Ez06m49b5WZst66Wrfv5TvKs9TZHeeBX9CovxONiQ4DLRwTaR-5ushZsULsE689UezdvvS3hgcAOT0gFiZ-DuPCoZw6rymSgpQ',
+              },
+              body: jsonEncode(<String, dynamic>{
+                'priority': 'high',
+                'data': <String, dynamic>{
+                  'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+                  'status': 'done',
+                  'body': body,
+                  'title': title,
+                },
+                'notification': <String, dynamic>{
+                  "title": title,
+                  "body": body,
+                  "android_channel_id": "dbfood"
+                },
+                "to": token,
+              }));
+      print(response);
     } catch (e) {
       print(e);
       if (kDebugMode) {
@@ -238,21 +256,41 @@ await FirebaseFirestore.instance.collection("User Token").doc(FirebaseAuth.insta
         child: Form(
           key: _formKey,
           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            TextFormField(
-              keyboardType: TextInputType.text,
-              controller: tokenid,
-              decoration: InputDecoration(
-                hintText: "Enter token",
+            if (_selectedUser != null)
+              DropdownButton<UserData>(
+                value: _selectedUser,
+                hint: const Text("Select User"),
+                items: userData
+                    .map(
+                        (e) => DropdownMenuItem(child: Text(e.email), value: e))
+                    .toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedUser = value;
+                  });
+                },
+              )
+            else
+              Center(
+                child: CircularProgressIndicator(),
               ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter tokens';
-                }
-                return null;
-              },
-            ),
-
             const SizedBox(height: 20),
+
+            // TextFormField(
+            //   keyboardType: TextInputType.text,
+            //   controller: tokenid,
+            //   decoration: InputDecoration(
+            //     hintText: "Enter token",
+            //   ),
+            //   validator: (value) {
+            //     if (value == null || value.isEmpty) {
+            //       return 'Please enter tokens';
+            //     }
+            //     return null;
+            //   },
+            // ),
+
+            // const SizedBox(height: 20),
 
             TextFormField(
                 controller: title,
@@ -295,8 +333,8 @@ await FirebaseFirestore.instance.collection("User Token").doc(FirebaseAuth.insta
                   //{
 
                   DocumentSnapshot snap = await FirebaseFirestore.instance
-                      .collection("User Token")
-                      .doc(FirebaseAuth.instance.currentUser!.uid)
+                      .collection("User Data")
+                      .doc(_selectedUser!.userId)
                       .get();
 
                   //var doc;

@@ -24,8 +24,10 @@ class _LoginScreenUserState extends State<LoginScreenUser> {
   final AuthService _auth = AuthService(FirebaseAuth.instance);
   final _formKey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  TextEditingController emailField = TextEditingController();
-  TextEditingController passwordField = TextEditingController();
+  TextEditingController emailField = TextEditingController(
+      text: "umer@gmail.com"); //     "kashafu719@gmail.com");
+  TextEditingController passwordField =
+      TextEditingController(text: "umer123"); //  "kashu0309");
   String error = "";
   String role = "";
 

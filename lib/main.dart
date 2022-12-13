@@ -5,9 +5,9 @@ import 'package:keto_app/screens/splashscreen.dart';
 import 'package:keto_app/screens/welcome_screen.dart';
 
 Future<void> backgroundhandler(RemoteMessage message) async {
-  // print("This is a message from background");
-  //print(message.notification!.title);
-  // print(message.notification!.body);
+  print("This is a message from background");
+  print(message.notification!.title);
+  print(message.notification!.body);
 }
 
 Future main() async {
